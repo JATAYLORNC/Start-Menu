@@ -75,15 +75,8 @@ namespace Start.Controllers
 
                     List<String> progFiles = new List<String>(Directory.EnumerateFiles(searchDir, "*.*", SearchOption.AllDirectories));
 
-                    /*List<String> fileNameList = new List<String>();*/
-
                     foreach (String filePath in progFiles)
                     {
-                        /*fileNameList.Add(Path.GetFileNameWithoutExtension(filePath));
-                        /*if (!pathList.ContainsKey(Path.GetFileNameWithoutExtension(filePath)))
-                        {
-                            pathList.Add(Path.GetFileNameWithoutExtension(filePath), filePath);
-                        }*/
 
                         if (ModelState.IsValid)
                         {
@@ -99,44 +92,17 @@ namespace Start.Controllers
                             program = new Program()
                             {
                                 Title = fileName,
-                                Path = filePath
+                                Path = filePath,
+                                IconPath = "", 
+                                Count = 0
                             };
 
                             programList.Add(program);
                             db.Programs.Add(program);
-                            db.SaveChanges();
-
-
-                            /*Thread thread = new Thread(() => {
-                                string myPath = GetShortcutTargetFile(filePath);
-
-                                if (!String.IsNullOrEmpty(myPath))
-                                {
-                                    program = new Program()
-                                    {
-                                        Title = fileName,
-                                        Path = myPath
-                                    };
-                                    Monitor.Enter(db);
-                                    programList.Add(program);
-                                    db.Programs.Add(program);
-                                    db.SaveChanges();
-                                    Monitor.Exit(db);
-                                }
-                            });
-                            thread.SetApartmentState(ApartmentState.STA);
-                            thread.Start();*/
+                            db.SaveChanges();                       
                         }
-                                
-
                     }
-
-
-                    /*ViewData["Executables"] = progFiles;
-                    ViewData["FileNames"] = fileNameList;
-                    ViewData["PathList"] = pathList;*/
                     return View(programList);
-                    /* return View(db.Programs.ToList());*/
                 }
                 else
                 {
@@ -152,34 +118,61 @@ namespace Start.Controllers
             }
         }
 
-        /*public static String GetShortcutTargetFile(String shortcutFilename)
+        public ActionResult Settings()
         {
-            string targetname;
-            string pathOnly = System.IO.Path.GetDirectoryName(shortcutFilename);
-            string filenameOnly = System.IO.Path.GetFileName(shortcutFilename);
+            List<Program> iconData =
+                   (from Program in db.Programs
+                    select Program).ToList();
 
-            Shell shell = new Shell();
-            Folder folder = shell.NameSpace(pathOnly);
-            FolderItem folderItem = folder.ParseName(filenameOnly);
-            if (folderItem != null)
+            return View(iconData);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Settings (string[] Title, string[] IconPath)
+        {
+
+            if (ModelState.IsValid)
             {
-                if (folderItem.IsLink)
+
+                for(int i=0; i<Title.Length; i++)
                 {
-                    Shell32.ShellLinkObject link = (Shell32.ShellLinkObject)folderItem.GetLink;
-                    targetname = link.Target.Path;  // <-- main difference
-                    if (targetname.StartsWith("{"))
-                    { // it is prefixed with {54A35DE2-guid-for-program-files-x86-QZ32BP4}
-                        int endguid = targetname.IndexOf("}");
-                        if (endguid > 0)
-                        {
-                            targetname = "C:\\program files (x86)" + targetname.Substring(endguid + 1);
-                        }
+                    if(IconPath[i] == null)
+                    {
+                        continue;
                     }
-                    return targetname;
+
+
+                }
+
+                Program executeProgram =
+                    (from Program in db.Programs
+                     where Program.Title == queryTitle
+                     select Program).FirstOrDefault();
+
+                String pathName = executeProgram.Path;
+
+                Process executeFile = new Process();
+
+                executeFile.StartInfo.FileName = pathName;
+                executeFile.Start();
+
+                executeProgram.Count = executeProgram.Count++;
+
+                try
+                {
+                    db.Programs.SubmitChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    // Provide for exceptions.
                 }
             }
-            return String.Empty;
-        }*/
+            programList = (from Program in db.Programs select Program).ToList();
+            return View(programList);
+
+        }
 
         // GET: Programs/Details/5
         public ActionResult Details(int? id)

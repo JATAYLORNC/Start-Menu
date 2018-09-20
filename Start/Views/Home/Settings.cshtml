@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+}
+
+@{
+    if (IsPost)
+    {
+        string title = Request.Form["title"];
+        string iconpath = Request.Form["iconpath"];
+
+        <text>
+            You entered: <br />
+            Company Name: @companyname <br />
+            Contact Name: @contactname <br />
+        </text>
+    }
+}
+
+<div class="jumbotron" style="background-color:#02a8f2; color:#ffffff; text-align:center">
+    <h1>Customize Program Icons</h1>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            @Html.AntiForgeryToken();
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Program Name</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Custom Icon Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @Html.AntiForgeryToken();
+                        @{
+                            foreach (var item in Model)
+                            {
+                                <td><input type="text" class="form-control" name="Title" value=item.Title readonly /></td>
+                                if (item.IconPath != "")
+                                {
+                                    <td><img src=item.IconPath alt="program icon" /></td>
+                                }
+                                <td>
+                                    <input type="text" class="form-control" name="IconPath" value=item.IconPath />
+                                </td>
+                            }
+                        }
+                    </tr>
+                </tbody>
+            </table>
+            <input type="submit" value="Submit" class="submit" />
+        </form>
+    </div>
+</div>
+
