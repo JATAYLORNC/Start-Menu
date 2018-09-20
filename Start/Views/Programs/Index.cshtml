@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Start.Models.Program>
+
+@{
+    ViewBag.Title = "Start Menu";
+}
+
+<div class="jumbotron" style="background-color:#02a8f2; color:#ffffff; text-align:center">
+    <h1>Start Menu</h1>
+    <p>Launch your Start Menu programs from the Web!</p>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            @Html.AntiForgeryToken();
+            @{
+                foreach (var item in Model)
+                {
+                    String name = item.Title;
+                    <input type="submit" name="execute" value="@name" class="btn" style="margin-right: 16px; margin-bottom: 16px; color: black; background-color: #4cff00; font-weight: bold" />
+                }
+            }
+        </form>
+    </div>
+</div>
