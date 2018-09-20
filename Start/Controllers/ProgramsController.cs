@@ -27,8 +27,6 @@ namespace Start.Controllers
         public ActionResult Index(string execute)
         {
 
-            Table<Program> Programs = db.GetTable<Program>();
-
             if (ModelState.IsValid)
             {
                 String queryTitle = execute;
@@ -36,7 +34,7 @@ namespace Start.Controllers
                 Program executeProgram =
                     (from Program in db.Programs
                     where Program.Title == queryTitle
-                    select Program).FirstOrDefault();
+                    select Program).SingleOrDefault();
 
                 String pathName = executeProgram.Path;
 
@@ -49,7 +47,7 @@ namespace Start.Controllers
 
                 try
                 {
-                    db.Programs.SubmitChanges();
+                    db.SaveChanges();
                 }
                 catch (Exception e)
                 {
@@ -135,33 +133,28 @@ namespace Start.Controllers
             if (ModelState.IsValid)
             {
 
-                for(int i=0; i<Title.Length; i++)
+                List<Program> iconData =
+                  (from Program in db.Programs
+                   select Program).ToList();
+
+                int count = 0;
+
+                foreach (Program item in iconData)
                 {
-                    if(IconPath[i] == null)
+                    if(IconPath[count] == null)
                     {
+                        count++;
                         continue;
                     }
 
+                    item.IconPath = IconPath[count];
+                    count++;
 
                 }
 
-                Program executeProgram =
-                    (from Program in db.Programs
-                     where Program.Title == queryTitle
-                     select Program).FirstOrDefault();
-
-                String pathName = executeProgram.Path;
-
-                Process executeFile = new Process();
-
-                executeFile.StartInfo.FileName = pathName;
-                executeFile.Start();
-
-                executeProgram.Count = executeProgram.Count++;
-
                 try
                 {
-                    db.Programs.SubmitChanges();
+                    db.SaveChanges();
                 }
                 catch (Exception e)
                 {
@@ -169,8 +162,10 @@ namespace Start.Controllers
                     // Provide for exceptions.
                 }
             }
-            programList = (from Program in db.Programs select Program).ToList();
-            return View(programList);
+            List<Program> displayData =
+                  (from Program in db.Programs
+                   select Program).ToList();
+            return View(displayData);
 
         }
 

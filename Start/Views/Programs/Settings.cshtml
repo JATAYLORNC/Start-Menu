@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+}
+
+<div class="jumbotron" style="background-color:#02a8f2; color:#ffffff; text-align:center">
+    <h1>Customize Program Icons</h1>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            @Html.AntiForgeryToken();
+            <table class="table">
+                <thead>
+                    <tr class="row">
+                        <th class="col-md-5" scope="col">Program Name</th>
+                        <th class="col-md-2" scope="col">Icon</th>
+                        <th class="col-md-5" scope="col">Custom Icon Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.AntiForgeryToken();
+                    @{
+                        foreach (var item in Model)
+                        {
+                            <tr class="row">
+                                <td class="col-md-5"><input type="text" class="form-control" name="Title" value="@item.Title" readonly /></td>
+
+                                @if (!String.IsNullOrEmpty(@item.IconPath))
+                                {
+                                    <td class="col-md-2"><img src="@item.IconPath" alt="program icon" /></td>
+                                }
+                                else
+                                {
+                                    <td class="col-md-2"></td>
+                                }
+                                <td class="col-md-5"><input type="text" class="form-control" name="IconPath" value="@item.IconPath" /></td>
+                            </tr>
+                        }
+                    }
+                            
+                        </tbody>
+            </table>
+            <input type="submit" value="Submit" class="submit" />
+        </form>
+    </div>
+</div>
+
