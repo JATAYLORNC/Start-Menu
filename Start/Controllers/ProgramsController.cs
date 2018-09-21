@@ -43,10 +43,11 @@ namespace Start.Controllers
                 executeFile.StartInfo.FileName = pathName;
                 executeFile.Start();
 
-                executeProgram.Count = executeProgram.Count++;
+                executeProgram.Count++;
 
                 try
                 {
+                    db.Entry(executeProgram).State = EntityState.Modified;
                     db.SaveChanges();
                 }
                 catch (Exception e)
@@ -91,7 +92,7 @@ namespace Start.Controllers
                             {
                                 Title = fileName,
                                 Path = filePath,
-                                IconPath = "", 
+                                IconPath = "/Images/noun_Lnk_903502_000000.png", 
                                 Count = 0
                             };
 
@@ -127,45 +128,42 @@ namespace Start.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Settings (string[] Title, string[] IconPath)
+        public ActionResult Settings (HttpPostedFileBase[] uploadFile, string[] progName)
         {
 
             if (ModelState.IsValid)
             {
-
-                List<Program> iconData =
-                  (from Program in db.Programs
-                   select Program).ToList();
-
                 int count = 0;
 
-                foreach (Program item in iconData)
+                foreach (HttpPostedFileBase file in uploadFile)
                 {
-                    if(IconPath[count] == null)
+
+                    if (file != null && file.ContentLength > 0)
+                        try
+                        {
+                            string path = Path.Combine(Server.MapPath("~/Images/"),
+                                                       Path.GetFileName(file.FileName));
+                            file.SaveAs(path);
+
+                            String name = progName[count];
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                        }
+                    else
                     {
-                        count++;
-                        continue;
+                        ViewBag.Message = "You have not specified a file.";
                     }
-
-                    item.IconPath = IconPath[count];
-                    count++;
-
-                }
-
-                try
-                {
-                    db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    // Provide for exceptions.
                 }
             }
-            List<Program> displayData =
-                  (from Program in db.Programs
-                   select Program).ToList();
-            return View(displayData);
+
+            List<Program> iconData =
+                   (from Program in db.Programs
+                    select Program).ToList();
+
+            return View(iconData);
 
         }
 

@@ -12,15 +12,22 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form method="post">
-            @Html.AntiForgeryToken();
+        <form method="post" >
+            <div class="row">
+            @Html.AntiForgeryToken()
             @{
                 foreach (var item in Model)
                 {
                     String name = item.Title;
-                    <input type="submit" name="execute" value="@name" class="btn" style="margin-right: 16px; margin-bottom: 16px; color: black; background-color: #4cff00; font-weight: bold" />
+
+                    <div class="form-group col-md-2" style="height: 185px" >
+                        <input type="image" src="/Images/noun_Lnk_903502_000000.png" alt="Submit" class="form-control" id="Link" name="execute" value="@name" style="color: black; height: 70px; width: 70px; border: none" />
+                        <label for="Link">@name</label>
+                        <label for="Link" style="display: block; background-color: lightgray; width: 70%">Run Count: @item.Count</label>
+                    </div>
                 }
             }
+            </div>
         </form>
     </div>
 </div>
