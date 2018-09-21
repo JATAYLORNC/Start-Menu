@@ -139,23 +139,44 @@ namespace Start.Controllers
                 {
 
                     if (file != null && file.ContentLength > 0)
+                    {
                         try
                         {
-                            string path = Path.Combine(Server.MapPath("~/Images/"),
+                            string path = Path.Combine(Server.MapPath("/Images/"),
                                                        Path.GetFileName(file.FileName));
                             file.SaveAs(path);
 
                             String name = progName[count];
 
+                            Program updateProgram =
+                                (from Program in db.Programs
+                                 where Program.Title == name
+                                 select Program).SingleOrDefault();
+
+                            updateProgram.IconPath = path;
+
+                            try
+                            {
+                                db.Entry(updateProgram).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                // Provide for exceptions.
+                            }
                         }
                         catch (Exception ex)
                         {
                             ViewBag.Message = "ERROR:" + ex.Message.ToString();
                         }
+                    }
                     else
                     {
                         ViewBag.Message = "You have not specified a file.";
                     }
+
+                    count++;
                 }
             }
 

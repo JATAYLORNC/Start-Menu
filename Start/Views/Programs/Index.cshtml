@@ -18,11 +18,11 @@
             @{
                 foreach (var item in Model)
                 {
-                    String name = item.Title;
+                    var imageName = Path.GetFileName(@item.IconPath);
 
                     <div class="form-group col-md-2" style="height: 185px" >
-                        <input type="image" src="/Images/noun_Lnk_903502_000000.png" alt="Submit" class="form-control" id="Link" name="execute" value="@name" style="color: black; height: 70px; width: 70px; border: none" />
-                        <label for="Link">@name</label>
+                        <input type="image" src="/Images/@imageName" alt="Submit" class="form-control" id="Link" name="execute" value="@item.Title" style="color: black; height: 70px; width: auto; border: none" />
+                        <label for="Link">@item.Title</label>
                         <label for="Link" style="display: block; background-color: lightgray; width: 70%">Run Count: @item.Count</label>
                     </div>
                 }
