@@ -10,6 +10,23 @@
 
 </div>
 
+<div>
+    <form action="/Programs/Search" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="input-group col-md-8" style="width: 100%; margin-top: 32px; margin-bottom: 32px">
+                <input type="text" class="form-control" name="searchString" placeholder="Search for a Program">
+                <div class="input-group-append">
+                    <input type="submit" value="Search" class="btn" />
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </form>
+
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <form method="post" >

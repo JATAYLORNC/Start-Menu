@@ -61,6 +61,22 @@ namespace Start.Controllers
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(string searchString)
+        {
+
+            var programs = (from Program in db.Programs
+                            select Program);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+               programs = programs.Where(s => s.Title.Contains(searchString));
+            }
+
+            return View("Index", programs);
+        }
+
         // GET: Programs
         public ActionResult Index()
         {
