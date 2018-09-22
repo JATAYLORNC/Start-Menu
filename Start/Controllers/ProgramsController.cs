@@ -97,7 +97,7 @@ namespace Start.Controllers
                         {
                             String fileName = Path.GetFileNameWithoutExtension(filePath);
 
-                            if(fileName == "desktop" || fileName == "Desktop")
+                            if(fileName == "desktop" || fileName == "Desktop" || filePath.Contains("Accessories"))
                             {
                                 continue;
                             }
