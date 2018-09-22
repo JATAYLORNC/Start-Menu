@@ -22,19 +22,23 @@
                 <tbody>
                     @Html.AntiForgeryToken()
                     @{
+                        /*Loop through each Program record returned from ProgramController*/
                         foreach (var item in Model)
                         {
                             <tr class="row">
                                 <td class="col-md-4"><input type="text" style="width: 100%" name="progName" value="@item.Title" readonly /></td>
 
+                                @*Check if the Icon is the default image*@
                                 @if ((@item.IconPath == "/Images/noun_Lnk_903502_000000.png"))
                                 {
                                     <td class="col-md-3"><img src="@item.IconPath" alt="program icon" style="width: auto; height: 60px" /></td>
                                 }
                                 else
-                                {
+                                {   
+                                    /*Parse the full path to just grab the icon name.  Chrome will prohibit use of files determined to be
+                                     local based on the use of the full path.*/
                                     var imageName = Path.GetFileName(@item.IconPath);
-                                    <td class="col-md-3"><img src="/Images/@imageName" alt="program icon" /></td>
+                                    <td class="col-md-3"><img src="/Images/@imageName" alt="program icon" style="width: auto; height: 60px"/></td>
                                 }
                                 <td class="col-md-5"><input type="file" class="form-control" name="uploadFile" id="file" /></td>
                             </tr>
