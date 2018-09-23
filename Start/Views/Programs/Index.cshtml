@@ -37,12 +37,13 @@
             @{
                 foreach (var item in Model)
                 {
+                    String name = item.Title;
                     var imageName = Path.GetFileName(@item.IconPath);
 
-                    <div class="form-group col-md-2" style="height: 185px" >
-                        <input type="image" src="/Images/@imageName" alt="Submit" class="form-control" id="Link" name="execute" value="@item.Title" style="color: black; height: 70px; width: auto; border: none" />
+                    <div class="form-group col-md-2 text-center" style="height: 200px" >
+                        <button type="submit" class="form-control" id="Link" name="execute" value="@item.Title" style="height: 70px; outline: none !important; border: none; box-shadow: none;"><img src="/Images/@imageName" alt="Submit" style="height: 60px; width: auto;" /></button>
                         <label for="Link">@item.Title</label>
-                        <label for="Link" style="display: block; background-color: lightgray; width: 70%">Run Count: @item.Count</label>
+                        <label for="Link" style="display: block; background-color: lightgray;">Run Count: @item.Count</label>
                     </div>
                 }
             }
