@@ -22,7 +22,6 @@ namespace Start.Controllers
         private StartContext db = new StartContext();
         private List<Program> programList = new List<Program>();
 
-
         /*Method to execute desktop program when icon is clicked from web app*/
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,8 +82,10 @@ namespace Start.Controllers
                programs = programs.Where(s => s.Title.Contains(searchString));
             }
 
+            programList = programs.ToList();
+
             /*Update the Index view to display only Programs returned from query*/
-            return View("Index", programs);
+            return View("Index", programList);
         }
 
         /* Method to display the Index view*/
